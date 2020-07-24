@@ -35,8 +35,10 @@ Module Main
                             If expiredCodes.Length > 5000 Then
                                 'Take 5000 codes at a time
                                 For index = 0 To expiredCodes.Length Step 5000
-                                    Dim batch As String() = Nothing
-                                    Array.Copy(expiredCodes, index, batch, 0, If(expiredCodes.Length - index > 5000, 5000, expiredCodes.Length - index))
+                                    'Create a copy of a part of the total codes
+                                    Dim batchSize As Integer = If(expiredCodes.Length - index > 5000, 5000, expiredCodes.Length - index)
+                                    Dim batch(batchSize - 1) As String
+                                    Array.Copy(expiredCodes, index, batch, 0, batchSize)
 
                                     'Create a fake JSON and insert into database
                                     Dim recallCode As String = Guid.NewGuid().ToString()
