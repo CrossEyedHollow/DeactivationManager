@@ -36,7 +36,7 @@ Module Main
                             Dim jsonBody = JsonOperationals.IDA(Date.UtcNow, AggregationType.Unit_Packets_Only, DeactivationType.UI_unused, expiredCodes, Nothing, recallCode)
 
                             'UPDATE db 
-                            db.InsertRawJson("tbljson", jsonBody, "IDA")
+                            db.InsertRawJson("tbljson", jsonBody, "IDA", recallCode)
                         Case Else
                             Throw New Exception("Invalid WorkMode value, please check the Settings.xml file")
                     End Select

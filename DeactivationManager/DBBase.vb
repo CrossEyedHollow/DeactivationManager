@@ -29,7 +29,7 @@ Public Class DBBase
 
         'Instantiate necessary objects
         conn = New MySqlConnection(cBuilder.ConnectionString)
-        cmd = New MySqlCommand() With {.Connection = conn}
+        cmd = New MySqlCommand() With {.Connection = conn, .CommandTimeout = 600000}
         adapter = New MySqlDataAdapter()
     End Sub
 
@@ -60,7 +60,7 @@ Public Class DBBase
             cmd.ExecuteNonQuery()
             output = True
         Catch ex As Exception
-            ReportTools.Output.Report($"Exception occured while writing to Database: '{ex.Message}'; {Environment.NewLine}Query: {query}")
+            ReportTools.Output.Report($"Exception occured while writing to Database: '{ex.Message}'; {Environment.NewLine}")
         End Try
 
         'Close connection and return the result
@@ -78,7 +78,7 @@ Public Class DBBase
             cmd.ExecuteNonQuery()
             output = cmd.LastInsertedId
         Catch ex As Exception
-            ReportTools.Output.Report($"Exception occured while writing to Database: '{ex.Message}'; {Environment.NewLine}Query: {query}")
+            ReportTools.Output.Report($"Exception occured while writing to Database: '{ex.Message}'; {Environment.NewLine}")
         End Try
 
         'Close connection and return the result
