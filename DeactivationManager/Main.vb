@@ -31,12 +31,31 @@ Module Main
                             db.DeactivateCodes(expiredCodes)
 
                         Case WorkMode.Primary
-                            'Create a fake JSON and insert into database
-                            Dim recallCode As String = Guid.NewGuid().ToString()
-                            Dim jsonBody = JsonOperationals.IDA(Date.UtcNow, AggregationType.Unit_Packets_Only, DeactivationType.UI_unused, expiredCodes, Nothing, recallCode)
 
-                            'UPDATE db 
-                            db.InsertRawJson("tbljson", jsonBody, "IDA", recallCode)
+                            If expiredCodes.Length > 5000 Then
+                                'Take 5000 codes at a time
+                                For index = 0 To expiredCodes.Length Step 5000
+                                    Dim batch As String() = Nothing
+                                    Array.Copy(expiredCodes, index, batch, 0, If(expiredCodes.Length - index > 5000, 5000, expiredCodes.Length - index))
+
+                                    'Create a fake JSON and insert into database
+                                    Dim recallCode As String = Guid.NewGuid().ToString()
+                                    Dim jsonBody = JsonOperationals.IDA(Date.UtcNow, AggregationType.Unit_Packets_Only, DeactivationType.UI_unused, batch, Nothing, recallCode)
+
+                                    'UPDATE db 
+                                    db.InsertRawJson("tbljson", jsonBody, "IDA", recallCode)
+                                Next
+                            Else
+                                'Create a fake JSON and insert into database
+                                Dim recallCode As String = Guid.NewGuid().ToString()
+                                Dim jsonBody = JsonOperationals.IDA(Date.UtcNow, AggregationType.Unit_Packets_Only, DeactivationType.UI_unused, expiredCodes, Nothing, recallCode)
+
+                                'UPDATE db 
+                                db.InsertRawJson("tbljson", jsonBody, "IDA", recallCode)
+                            End If
+
+
+
                         Case Else
                             Throw New Exception("Invalid WorkMode value, please check the Settings.xml file")
                     End Select
