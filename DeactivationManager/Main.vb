@@ -27,7 +27,9 @@ Module Main
                     'Deactivate depending on WorkMode
                     Select Case WorkMode
                         Case WorkMode.Facility
+
                             'Update the database
+                            Output.ToConsole($"{result.Rows.Count} expired codes found deactivating.")
                             db.DeactivateCodes(expiredCodes)
 
                         Case WorkMode.Primary
@@ -44,6 +46,7 @@ Module Main
                                     Dim recallCode As String = Guid.NewGuid().ToString()
                                     Dim jsonBody = JsonOperationals.IDA(Date.UtcNow, AggregationType.Unit_Packets_Only, DeactivationType.UI_unused, batch, Nothing, recallCode)
 
+                                    Output.ToConsole($"Deactivating a batch of {batchSize} codes.")
                                     'UPDATE db 
                                     db.InsertRawJson("tbljson", jsonBody, "IDA", recallCode)
                                 Next
@@ -51,6 +54,8 @@ Module Main
                                 'Create a fake JSON and insert into database
                                 Dim recallCode As String = Guid.NewGuid().ToString()
                                 Dim jsonBody = JsonOperationals.IDA(Date.UtcNow, AggregationType.Unit_Packets_Only, DeactivationType.UI_unused, expiredCodes, Nothing, recallCode)
+
+                                Output.ToConsole($"Deactivating a batch of {expiredCodes.Length} codes.")
 
                                 'UPDATE db 
                                 db.InsertRawJson("tbljson", jsonBody, "IDA", recallCode)

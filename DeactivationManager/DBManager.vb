@@ -12,7 +12,7 @@ Public Class DBManager
         Dim query As String
         Select Case Main.WorkMode
             Case Enums.WorkMode.Facility
-                query = $"SELECT * FROM `{DBName}`.`tblprimarycodes` WHERE fldDeactivate = 1 AND fldPrintDate IS NULL AND  fldCreatedDate < NOW() - INTERVAL 6 MONTH;"
+                query = $"SELECT * FROM `{DBName}`.`tblprimarycodes` WHERE fldDeactivated = 0 AND fldPrintedDate IS NULL AND fldCreatedDate < NOW() - INTERVAL 6 MONTH;"
             Case Enums.WorkMode.Primary
                 query = $"SELECT * FROM `{DBName}`.`tblprimarycodes` WHERE fldIDA IS NULL AND fldPrintDate IS NULL AND fldIssueDate < NOW() - INTERVAL 6 MONTH;"
             Case Else
